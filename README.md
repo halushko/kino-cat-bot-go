@@ -6,3 +6,5 @@
 * Add GitHub actions
 ## v0.3
 * Add errors logging
+## v0.4
+* Fix workflows
