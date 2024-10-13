@@ -21,10 +21,10 @@ func HandleDocuments(bot *telebot.Bot) {
 	bot.Handle(telebot.OnDocument, func(c telebot.Context) error {
 		document := c.Message().Document
 
-		log.Printf("Отримано файл: %s", document.FileName)
+		log.Printf("[TorrentFileHandler] Отримано файл: %s", document.FileName)
 
 		if document.MIME != "application/x-bittorrent" {
-			return c.Send("Буль-ласка, відправте .torrent файл.")
+			return c.Send("[TorrentFileHandler] Будь-ласка, відправте .torrent файл.")
 		}
 
 		chatId := c.Chat().ID
@@ -52,14 +52,19 @@ func HandleDocuments(bot *telebot.Bot) {
 
 		jsonData, err := json.Marshal(msg)
 		if err != nil {
+			log.Printf("[TorrentFileHandler] Error:%s", err)
 			return err
 		}
 
-		err = bot_nats.PublishToNATS("TELEGRAM_INPUT_FILE_QUEUE", jsonData)
-		if err != nil {
+		if err = bot_nats.PublishToNATS("TELEGRAM_INPUT_FILE_QUEUE", jsonData); err != nil {
+			log.Printf("[TorrentFileHandler] Error:%s", err)
 			return err
 		}
 
-		return c.Send("Вы отправили файл: " + document.FileName)
+		if err = c.Send("Файл " + document.FileName + " додано до обробки"); err != nil {
+			log.Printf("[TorrentFileHandler] Error:%s", err)
+			return err
+		}
+		return nil
 	})
 }

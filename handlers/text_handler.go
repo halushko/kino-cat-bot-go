@@ -25,11 +25,17 @@ func HandleTextMessages(bot *telebot.Bot) {
 		}
 		jsonData, err := json.Marshal(msg)
 		if err != nil {
+			log.Printf("[HandleTextMessages] ERROR:%s", err)
 			return err
 		}
 
-		err = bot_nats.PublishToNATS("TELEGRAM_INPUT_TEXT_QUEUE", jsonData)
-		if err != nil {
+		if err = bot_nats.PublishToNATS("TELEGRAM_INPUT_TEXT_QUEUE", jsonData); err != nil {
+			log.Printf("[HandleTextMessages] ERROR:%s", err)
+			return err
+		}
+
+		if err = c.Send("Ваше повідомлення " + message + " додано до обробки"); err != nil {
+			log.Printf("[HandleTextMessages] ERROR:%s", err)
 			return err
 		}
 
