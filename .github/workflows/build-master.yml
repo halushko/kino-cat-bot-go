@@ -4,16 +4,15 @@ on:
   push:
     branches:
       - master
-  pull_request:
-    branches:
-      - master
+    tags:
+      - '*'
 
 jobs:
-  build:
+  publish:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v3
 
       - name: Log in to Docker Hub
@@ -22,7 +21,6 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
-      # Установите QEMU для эмуляции других архитектур
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
         with:
@@ -34,10 +32,15 @@ jobs:
           install: true
           driver-opts: network=host
 
-      - name: Build and Push Docker image
+      - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/kino-cat-bot-go:latest
-          platforms: linux/amd64,linux/arm64
+          tags: |
+            <your-dockerhub-username>/kino-cat-bot-go:latest
+            <your-dockerhub-username>/kino-cat-bot-go:${{ github.ref_name }}
+
+      - name: Complete
+        run: |
+          echo "Docker image published with tags: latest and ${{ github.ref_name }}"
