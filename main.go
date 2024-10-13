@@ -18,6 +18,8 @@ func main() {
 }
 
 func prepareLogFile() *os.File {
+	log.Print("Старт бота")
+
 	logFile, err := os.OpenFile("bot.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
 	if err != nil {
 		log.Fatal(err)
