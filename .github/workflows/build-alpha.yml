@@ -36,6 +36,7 @@ jobs:
           push: true
           tags: |
             ${{ secrets.DOCKER_HUB_USERNAME }}/kino-cat-bot-go:alpha
+            ${{ secrets.DOCKER_HUB_USERNAME }}/kino-cat-bot-go:beta-latest
 
       - name: Complete
         run: |
