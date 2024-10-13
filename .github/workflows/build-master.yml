@@ -5,7 +5,7 @@ on:
     branches:
       - master
     tags:
-      - '*'
+      - 'v*'
 
 jobs:
   publish:
@@ -38,8 +38,8 @@ jobs:
           context: .
           push: true
           tags: |
-            <your-dockerhub-username>/kino-cat-bot-go:latest
-            <your-dockerhub-username>/kino-cat-bot-go:${{ github.ref_name }}
+            ${{ secrets.DOCKER_HUB_USERNAME }}/kino-cat-bot-go:latest
+            ${{ secrets.DOCKER_HUB_USERNAME }}/kino-cat-bot-go:${{ github.ref_name }}
 
       - name: Complete
         run: |
