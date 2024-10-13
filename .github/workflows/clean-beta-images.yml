@@ -19,7 +19,7 @@ jobs:
       - name: Extract branch name
         id: extract_branch
         run: |
-          BRANCH_NAME=$(echo "${{ github.event.pull_request.head.ref }}" | sed 's/[^a-zA-Z0-9-]//g')
+          BRANCH_NAME=beta-$(echo "${{ github.event.pull_request.head.ref }}" | sed 's/[^a-zA-Z0-9-]//g')
           echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
           echo "Branch being merged: $BRANCH_NAME"
 
