@@ -3,7 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"gopkg.in/telebot.v3"
-	"kino-cat-bot-go/nats"
+	"kino-cat-bot-go/bot_nats"
 	"log"
 )
 
@@ -17,7 +17,7 @@ func HandleTextMessages(bot *telebot.Bot) {
 		chatId := c.Chat().ID
 		message := c.Message().Text
 
-		log.Printf("[TextHandler] chatId:%s, message:%s", chatId, message)
+		log.Printf("[TextHandler] chatId:%d, message:%s", chatId, message)
 
 		msg := TelegramMessage{
 			ChatID: chatId,
@@ -28,10 +28,17 @@ func HandleTextMessages(bot *telebot.Bot) {
 			return err
 		}
 
-		err = nats.PublishToNATS("TELEGRAM_INPUT_TEXT_QUEUE", jsonData)
+		err = bot_nats.PublishToNATS("TELEGRAM_INPUT_TEXT_QUEUE", jsonData)
 		if err != nil {
 			return err
 		}
-		return c.Send("Ви написали: " + message)
+
+		err = bot_nats.PublishToNATS("TELEGRAM_OUTPUT_TEXT_QUEUE", jsonData)
+		if err != nil {
+			log.Printf("Помилка при відправці повідомлення на TELEGRAM_OUTPUT_TEXT_QUEUE: %v", err)
+			return err
+		}
+		log.Println("Повідомлення відправлено до TELEGRAM_OUTPUT_TEXT_QUEUE")
+		return nil
 	})
 }

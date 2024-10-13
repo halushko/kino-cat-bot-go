@@ -1,4 +1,4 @@
-package nats
+package bot_nats
 
 import (
 	"fmt"
@@ -8,11 +8,7 @@ import (
 )
 
 func PublishToNATS(natsQueue string, message []byte) error {
-	ip := os.Getenv("BROKER_IP")
-	port := os.Getenv("BROKER_PORT")
-	natsUrl := fmt.Sprintf("nats://%s:%s", ip, port)
-
-	nc, err := nats.Connect(natsUrl)
+	nc, err := Connect()
 	if err != nil {
 		return err
 	}
@@ -25,4 +21,15 @@ func PublishToNATS(natsQueue string, message []byte) error {
 
 	log.Printf("Повідомлення надіслано в NATS")
 	return nil
+}
+func Connect() (*nats.Conn, error) {
+	ip := os.Getenv("BROKER_IP")
+	port := os.Getenv("BROKER_PORT")
+	natsUrl := fmt.Sprintf("nats://%s:%s", ip, port)
+
+	nc, err := nats.Connect(natsUrl)
+	if err != nil {
+		return nil, err
+	}
+	return nc, nil
 }
