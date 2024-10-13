@@ -11,40 +11,40 @@ import (
 func StartNatsListener(bot *telebot.Bot) *nats.Conn {
 	nc, err := bot_nats.Connect()
 	if err != nil {
-		log.Printf("Помилка при підключенні до NATS:", err)
+		log.Printf("[StartNatsListener] Помилка при підключенні до NATS:", err)
 	}
 	_, err = nc.Subscribe("TELEGRAM_OUTPUT_TEXT_QUEUE", func(msg *nats.Msg) {
-		log.Println("Отримано повідомлення з NATS: %s", string(msg.Data))
+		log.Println("[StartNatsListener] Отримано повідомлення з NATS: %s", string(msg.Data))
 		chatID, messageText := parseNatsMessage(msg.Data)
 
-		log.Println("Парсинг повідомлення: chatID = %d, message = %s", chatID, messageText) // Новый лог для проверки данных
+		log.Println("[StartNatsListener] Парсинг повідомлення: chatID = %d, message = %s", chatID, messageText) // Новый лог для проверки данных
 
 		if chatID != 0 && messageText != "" {
 			_, err := bot.Send(&telebot.User{ID: chatID}, messageText)
 			if err != nil {
-				log.Println("Помилка при відправленні повідомлення користувачу: %v", err)
+				log.Println("[StartNatsListener] Помилка при відправленні повідомлення користувачу: %v", err)
 			} else {
-				log.Printf("Повідомлення надіслане користовачу: chatID = %d, message = %s", chatID, messageText)
+				log.Printf("[StartNatsListener] Повідомлення надіслане користовачу: chatID = %d, message = %s", chatID, messageText)
 			}
 		} else {
-			log.Println("Помилка: ID користувача чи текст повідомлення порожні")
+			log.Println("[StartNatsListener] Помилка: ID користувача чи текст повідомлення порожні")
 		}
 	})
 
 	if err != nil {
-		log.Println("Помилка підписки до черги NATS:", err)
+		log.Println("[StartNatsListener] Помилка підписки до черги NATS:", err)
 	}
 
 	err = nc.Flush()
 	if err != nil {
-		log.Println("Помилка після підписки до черги NATS:", err)
+		log.Println("[StartNatsListener] Помилка після підписки до черги NATS:", err)
 		return nil
 	}
 	if err = nc.LastError(); err != nil {
-		log.Println("Помилка після підписки до черги NATS:", err)
+		log.Println("[StartNatsListener] Помилка після підписки до черги NATS:", err)
 	}
 
-	log.Println("Підписка до черги NATS виконана")
+	log.Println("[StartNatsListener] Підписка до черги NATS виконана")
 	return nc
 }
 
@@ -57,7 +57,7 @@ func parseNatsMessage(data []byte) (int64, string) {
 	var msg NatsMessage
 	err := json.Unmarshal(data, &msg)
 	if err != nil {
-		log.Printf("Помилка при розборы повыдомлення з NATS: %v", err)
+		log.Printf("[StartNatsListener] Помилка при розборі повідомлення з NATS: %v", err)
 		return 0, ""
 	}
 

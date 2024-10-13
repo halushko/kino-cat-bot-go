@@ -17,7 +17,7 @@ func HandleTextMessages(bot *telebot.Bot) {
 		chatId := c.Chat().ID
 		message := c.Message().Text
 
-		log.Printf("[TextHandler] chatId:%d, message:%s", chatId, message)
+		log.Printf("[HandleTextMessages] chatId:%d, message:%s", chatId, message)
 
 		msg := TelegramMessage{
 			ChatID: chatId,
@@ -35,10 +35,10 @@ func HandleTextMessages(bot *telebot.Bot) {
 
 		err = bot_nats.PublishToNATS("TELEGRAM_OUTPUT_TEXT_QUEUE", jsonData)
 		if err != nil {
-			log.Printf("Помилка при відправці повідомлення на TELEGRAM_OUTPUT_TEXT_QUEUE: %v", err)
+			log.Printf("[HandleTextMessages] Помилка при відправці повідомлення на TELEGRAM_OUTPUT_TEXT_QUEUE: %v", err)
 			return err
 		}
-		log.Println("Повідомлення відправлено до TELEGRAM_OUTPUT_TEXT_QUEUE")
+		log.Println("[HandleTextMessages] Повідомлення відправлено до TELEGRAM_OUTPUT_TEXT_QUEUE")
 		return nil
 	})
 }

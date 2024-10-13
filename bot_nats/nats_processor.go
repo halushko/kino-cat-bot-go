@@ -19,7 +19,7 @@ func PublishToNATS(natsQueue string, message []byte) error {
 		return err
 	}
 
-	log.Printf("Повідомлення надіслано в NATS")
+	log.Printf("[PublishToNATS] Повідомлення надіслано в NATS")
 	return nil
 }
 func Connect() (*nats.Conn, error) {
