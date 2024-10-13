@@ -33,12 +33,6 @@ func HandleTextMessages(bot *telebot.Bot) {
 			return err
 		}
 
-		err = bot_nats.PublishToNATS("TELEGRAM_OUTPUT_TEXT_QUEUE", jsonData)
-		if err != nil {
-			log.Printf("[HandleTextMessages] Помилка при відправці повідомлення на TELEGRAM_OUTPUT_TEXT_QUEUE: %v", err)
-			return err
-		}
-		log.Println("[HandleTextMessages] Повідомлення відправлено до TELEGRAM_OUTPUT_TEXT_QUEUE")
 		return nil
 	})
 }
