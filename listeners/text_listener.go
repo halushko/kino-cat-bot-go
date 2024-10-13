@@ -2,18 +2,14 @@ package listeners
 
 import (
 	"encoding/json"
+	"github.com/halushko/kino-cat-core-go"
 	"github.com/nats-io/nats.go"
 	"gopkg.in/telebot.v3"
-	"kino-cat-bot-go/bot_nats"
 	"log"
 )
 
-func StartNatsListener(bot *telebot.Bot) *nats.Conn {
-	nc, err := bot_nats.Connect()
-	if err != nil {
-		log.Printf("[StartNatsListener] Помилка при підключенні до NATS:", err)
-	}
-	_, err = nc.Subscribe("TELEGRAM_OUTPUT_TEXT_QUEUE", func(msg *nats.Msg) {
+func StartTextMessagesSender(bot *telebot.Bot) {
+	processor := func(msg *nats.Msg) {
 		log.Println("[StartNatsListener] Отримано повідомлення з NATS: %s", string(msg.Data))
 		chatID, messageText := parseNatsMessage(msg.Data)
 
@@ -29,23 +25,13 @@ func StartNatsListener(bot *telebot.Bot) *nats.Conn {
 		} else {
 			log.Println("[StartNatsListener] Помилка: ID користувача чи текст повідомлення порожні")
 		}
-	})
-
-	if err != nil {
-		log.Println("[StartNatsListener] Помилка підписки до черги NATS:", err)
 	}
 
-	err = nc.Flush()
-	if err != nil {
-		log.Println("[StartNatsListener] Помилка після підписки до черги NATS:", err)
-		return nil
-	}
-	if err = nc.LastError(); err != nil {
-		log.Println("[StartNatsListener] Помилка після підписки до черги NATS:", err)
+	listener := &kino_cat_core_go.NatsListener{
+		Handler: processor,
 	}
 
-	log.Println("[StartNatsListener] Підписка до черги NATS виконана")
-	return nc
+	kino_cat_core_go.StartNatsListener("TELEGRAM_OUTPUT_TEXT_QUEUE", listener)
 }
 
 func parseNatsMessage(data []byte) (int64, string) {
