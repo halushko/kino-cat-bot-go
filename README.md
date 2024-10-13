@@ -4,3 +4,5 @@
 * Add base code
 ## v0.2
 * Add GitHub actions
+## v0.3
+* Add errors logging
