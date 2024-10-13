@@ -2,8 +2,8 @@ package handlers
 
 import (
 	"encoding/json"
+	"github.com/halushko/kino-cat-core-go"
 	"gopkg.in/telebot.v3"
-	"kino-cat-bot-go/bot_nats"
 	"log"
 )
 
@@ -29,7 +29,7 @@ func HandleTextMessages(bot *telebot.Bot) {
 			return err
 		}
 
-		if err = bot_nats.PublishToNATS("TELEGRAM_INPUT_TEXT_QUEUE", jsonData); err != nil {
+		if err = kino_cat_core_go.PublishToNATS("TELEGRAM_INPUT_TEXT_QUEUE", jsonData); err != nil {
 			log.Printf("[HandleTextMessages] ERROR:%s", err)
 			return err
 		}

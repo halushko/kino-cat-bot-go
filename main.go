@@ -19,8 +19,7 @@ func main() {
 		}
 	}()
 	bot := prepareBot()
-	nc := listeners.StartNatsListener(bot)
-	defer nc.Close()
+	listeners.StartTextMessagesSender(bot)
 
 	log.Println("Бота запущено")
 	bot.Start()
