@@ -3,7 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"gopkg.in/telebot.v3"
-	"kino-cat-bot-go/nats"
+	"kino-cat-bot-go/bot_nats"
 	"log"
 )
 
@@ -55,7 +55,7 @@ func HandleDocuments(bot *telebot.Bot) {
 			return err
 		}
 
-		err = nats.PublishToNATS("TELEGRAM_INPUT_FILE_QUEUE", jsonData)
+		err = bot_nats.PublishToNATS("TELEGRAM_INPUT_FILE_QUEUE", jsonData)
 		if err != nil {
 			return err
 		}

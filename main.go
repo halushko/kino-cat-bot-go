@@ -2,6 +2,7 @@ package main
 
 import (
 	"kino-cat-bot-go/handlers"
+	"kino-cat-bot-go/listeners"
 	"log"
 	"os"
 	"time"
@@ -10,23 +11,28 @@ import (
 )
 
 func main() {
-	log.SetOutput(prepareLogFile())
+	logFile := prepareLogFile()
+	log.SetOutput(logFile)
+	defer func() {
+		if err := logFile.Close(); err != nil {
+			log.Println("Помилка при спробі закрити лог файл: %v", err)
+		}
+	}()
 	bot := prepareBot()
+	nc := listeners.StartNatsListener(bot)
+	defer nc.Close()
 
-	log.Println("Бот запущен")
+	log.Println("Бота запущено")
 	bot.Start()
 }
 
 func prepareLogFile() *os.File {
-	logFile, err := os.OpenFile("bot.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+	log.Print("Старт бота")
+
+	logFile, err := os.OpenFile("bot.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0777)
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer func() {
-		if err := logFile.Close(); err != nil {
-			log.Printf("Помилка при спробі закрити лог файл: %v", err)
-		}
-	}()
 
 	return logFile
 }
