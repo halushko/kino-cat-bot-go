@@ -3,7 +3,7 @@ name: Build and Push Docker Image
 on:
   push:
     branches:
-      - main   # Укажите нужную ветку, например, main или master
+      - main
   pull_request:
     branches:
       - main
@@ -13,18 +13,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Проверка репозитория
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Логин в Docker Hub
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
-      # Сборка и публикация Docker-образов для нескольких платформ
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
         with:
