@@ -38,10 +38,10 @@ jobs:
           context: .
           push: true
           tags: |
+            ${{ secrets.DOCKER_HUB_USERNAME }}/kino-cat-bot-go:beta
+            ${{ secrets.DOCKER_HUB_USERNAME }}/kino-cat-bot-go:alpha
             ${{ secrets.DOCKER_HUB_USERNAME }}/kino-cat-bot-go:${{ github.ref_name }}
             ${{ secrets.DOCKER_HUB_USERNAME }}/kino-cat-bot-go:latest
-            ${{ secrets.DOCKER_HUB_USERNAME }}/kino-cat-bot-go:alpha
-            ${{ secrets.DOCKER_HUB_USERNAME }}/kino-cat-bot-go:beta
 
       - name: Complete
         run: |
