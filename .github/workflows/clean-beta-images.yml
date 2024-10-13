@@ -19,7 +19,7 @@ jobs:
       - name: Extract branch name
         id: extract_branch
         run: |
-          BRANCH_NAME=$(echo "${{ github.event.pull_request.head.ref }}" | sed 's/[^a-zA-Z0-9-]//g')
+          BRANCH_NAME=beta-$(echo "${{ github.event.pull_request.head.ref }}" | sed 's/[^a-zA-Z0-9-]//g')
           echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
           echo "Branch being merged: $BRANCH_NAME"
 
@@ -28,9 +28,11 @@ jobs:
         run: |
           REPO_NAME="${{ secrets.DOCKER_HUB_USERNAME }}/kino-cat-bot-go"
           BRANCH_NAME=${{ env.BRANCH_NAME }}
+          
           curl -s -u "${{ secrets.DOCKER_HUB_USERNAME }}:${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}" \
             "https://hub.docker.com/v2/repositories/$REPO_NAME/tags/?page_size=100" \
-            | jq -r '.results[] | select(.name | test("^" + $BRANCH_NAME + "-[0-9]{14}$")) | .name' > tags_to_delete.txt
+            | jq -r --arg BRANCH_NAME "$BRANCH_NAME" '.results[] | select(.name | test("^" + $BRANCH_NAME + "-[0-9]{14}$")) | .name' > tags_to_delete.txt
+          
           cat tags_to_delete.txt
 
       - name: Delete Docker images
