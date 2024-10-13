@@ -6,7 +6,6 @@ on:
       - master
     tags:
       - '*'
-
 jobs:
   publish:
     if: startsWith(github.ref, 'refs/tags/')
