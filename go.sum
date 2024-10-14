@@ -224,6 +224,8 @@ github.com/halushko/kino-cat-core-go v0.0.0-20241013174444-725037b2597c h1:5L6hb
 github.com/halushko/kino-cat-core-go v0.0.0-20241013174444-725037b2597c/go.mod h1:5nB9PMvPVXZBzd/bYtVNebhcL7W2VwU3Z6BI92reHuU=
 github.com/halushko/kino-cat-core-go v0.0.0-20241014062625-b863d47c46d9 h1:8VNiK/brJAdqI9Qvdxe/J+PTbiOLgdiSAS/pwfC/DF8=
 github.com/halushko/kino-cat-core-go v0.0.0-20241014062625-b863d47c46d9/go.mod h1:5nB9PMvPVXZBzd/bYtVNebhcL7W2VwU3Z6BI92reHuU=
+github.com/halushko/kino-cat-core-go v0.0.0-20241014122600-0bc9d6948808 h1:5RFm7Nq45G5g4a6oMoVmmTKorrZr0SGvT2Jfl//BBLA=
+github.com/halushko/kino-cat-core-go v0.0.0-20241014122600-0bc9d6948808/go.mod h1:5nB9PMvPVXZBzd/bYtVNebhcL7W2VwU3Z6BI92reHuU=
 github.com/hashicorp/consul/api v1.12.0/go.mod h1:6pVBMo0ebnYdt2S3H87XhekM/HHrUoTD2XXb/VrZVy0=
 github.com/hashicorp/consul/sdk v0.8.0/go.mod h1:GBvyrGALthsZObzUGsfgHZQDXjg4lOjagTIwIR1vPms=
 github.com/hashicorp/errwrap v1.0.0/go.mod h1:YH+1FKiLXxHSkmPseP+kNlulaMuP3n2brvKWEqk/Jc4=
