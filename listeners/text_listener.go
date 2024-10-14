@@ -2,7 +2,7 @@ package listeners
 
 import (
 	"encoding/json"
-	"github.com/halushko/kino-cat-core-go"
+	"github.com/halushko/kino-cat-core-go/nats_helper"
 	"github.com/nats-io/nats.go"
 	"gopkg.in/telebot.v3"
 	"log"
@@ -10,15 +10,15 @@ import (
 
 func StartTextMessagesSender(bot *telebot.Bot) {
 	processor := func(msg *nats.Msg) {
-		log.Println("[StartNatsListener] Отримано повідомлення з NATS: %s", string(msg.Data))
+		log.Printf("[StartNatsListener] Отримано повідомлення з NATS: %s", string(msg.Data))
 		chatID, messageText := parseNatsMessage(msg.Data)
 
-		log.Println("[StartNatsListener] Парсинг повідомлення: chatID = %d, message = %s", chatID, messageText) // Новый лог для проверки данных
+		log.Printf("[StartNatsListener] Парсинг повідомлення: chatID = %d, message = %s", chatID, messageText) // Новый лог для проверки данных
 
 		if chatID != 0 && messageText != "" {
 			_, err := bot.Send(&telebot.User{ID: chatID}, messageText)
 			if err != nil {
-				log.Println("[StartNatsListener] Помилка при відправленні повідомлення користувачу: %v", err)
+				log.Printf("[StartNatsListener] Помилка при відправленні повідомлення користувачу: %v", err)
 			} else {
 				log.Printf("[StartNatsListener] Повідомлення надіслане користовачу: chatID = %d, message = %s", chatID, messageText)
 			}
@@ -27,11 +27,11 @@ func StartTextMessagesSender(bot *telebot.Bot) {
 		}
 	}
 
-	listener := &kino_cat_core_go.NatsListener{
+	listener := &nats_helper.NatsListener{
 		Handler: processor,
 	}
 
-	kino_cat_core_go.StartNatsListener("TELEGRAM_OUTPUT_TEXT_QUEUE", listener)
+	nats_helper.StartNatsListener("TELEGRAM_OUTPUT_TEXT_QUEUE", listener)
 }
 
 func parseNatsMessage(data []byte) (int64, string) {

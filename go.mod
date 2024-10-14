@@ -3,7 +3,7 @@ module kino-cat-bot-go
 go 1.23.2
 
 require (
-	github.com/halushko/kino-cat-core-go v0.0.0-20241013162011-c7a8ff093865 // indirect
+	github.com/halushko/kino-cat-core-go v0.0.0-20241014062625-b863d47c46d9 // indirect
 	github.com/klauspost/compress v1.17.2 // indirect
 	github.com/nats-io/nats.go v1.37.0 // indirect
 	github.com/nats-io/nkeys v0.4.7 // indirect

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/halushko/kino-cat-core-go/logger_helper"
 	"kino-cat-bot-go/handlers"
 	"kino-cat-bot-go/listeners"
 	"log"
@@ -11,29 +12,12 @@ import (
 )
 
 func main() {
-	logFile := prepareLogFile()
-	log.SetOutput(logFile)
-	defer func() {
-		if err := logFile.Close(); err != nil {
-			log.Println("Помилка при спробі закрити лог файл: %v", err)
-		}
-	}()
+	logFile := logger_helper.SoftPrepareLogFile()
 	bot := prepareBot()
 	listeners.StartTextMessagesSender(bot)
-
 	log.Println("Бота запущено")
 	bot.Start()
-}
-
-func prepareLogFile() *os.File {
-	log.Print("Старт бота")
-
-	logFile, err := os.OpenFile("bot.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0777)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	return logFile
+	logger_helper.SoftLogClose(logFile)
 }
 
 func prepareBot() *telebot.Bot {
