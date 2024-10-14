@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
-	"github.com/halushko/kino-cat-core-go"
+	"github.com/halushko/kino-cat-core-go/nats_helper"
 	"gopkg.in/telebot.v3"
 	"log"
 )
@@ -56,7 +56,7 @@ func HandleDocuments(bot *telebot.Bot) {
 			return err
 		}
 
-		if err = kino_cat_core_go.PublishToNATS("TELEGRAM_INPUT_FILE_QUEUE", jsonData); err != nil {
+		if err = nats_helper.PublishToNATS("TELEGRAM_INPUT_FILE_QUEUE", jsonData); err != nil {
 			log.Printf("[TorrentFileHandler] Error:%s", err)
 			return err
 		}
