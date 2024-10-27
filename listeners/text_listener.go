@@ -1,51 +1,42 @@
 package listeners
 
 import (
-	"encoding/json"
 	"github.com/halushko/kino-cat-core-go/nats_helper"
-	"github.com/nats-io/nats.go"
 	"gopkg.in/telebot.v3"
 	"log"
 )
 
 func StartTextMessagesSender(bot *telebot.Bot) {
-	processor := func(msg *nats.Msg) {
-		log.Printf("[StartNatsListener] Отримано повідомлення з NATS: %s", string(msg.Data))
-		chatID, messageText := parseNatsMessage(msg.Data)
 
-		log.Printf("[StartNatsListener] Парсинг повідомлення: chatID = %d, message = %s", chatID, messageText) // Новый лог для проверки данных
+	processor := func(data []byte) {
+		log.Printf("[StartTextMessagesSender] Отримано повідомлення з NATS: %s", string(data))
+		userId, messageText, err := nats_helper.ParseNatsBotText(data)
 
-		if chatID != 0 && messageText != "" {
-			_, err := bot.Send(&telebot.User{ID: chatID}, messageText)
+		if err != nil {
+			log.Printf("[StartTextMessagesSender] Помилка при розборі повідомлення з NATS: %v", err)
+			return
+		}
+
+		log.Printf("[StartTextMessagesSender] Парсинг повідомлення: chatID = %d, message = %s", userId, messageText) // Новый лог для проверки данных
+
+		if userId != 0 && messageText != "" {
+			_, err := bot.Send(&telebot.User{ID: userId}, messageText)
 			if err != nil {
-				log.Printf("[StartNatsListener] Помилка при відправленні повідомлення користувачу: %v", err)
+				log.Printf("[StartTextMessagesSender] Помилка при відправленні повідомлення користувачу: %v", err)
 			} else {
-				log.Printf("[StartNatsListener] Повідомлення надіслане користовачу: chatID = %d, message = %s", chatID, messageText)
+				log.Printf("[StartTextMessagesSender] Повідомлення надіслане користовачу: chatID = %d, message = %s", userId, messageText)
 			}
 		} else {
-			log.Println("[StartNatsListener] Помилка: ID користувача чи текст повідомлення порожні")
+			log.Printf("[StartTextMessagesSender] Помилка: ID користувача чи текст повідомлення порожні")
 		}
 	}
 
-	listener := &nats_helper.NatsListener{
-		Handler: processor,
+	listener := &nats_helper.NatsListenerHandler{
+		Function: processor,
 	}
 
-	nats_helper.StartNatsListener("TELEGRAM_OUTPUT_TEXT_QUEUE", listener)
-}
-
-func parseNatsMessage(data []byte) (int64, string) {
-	type NatsMessage struct {
-		ChatID int64  `json:"chat_id"`
-		Text   string `json:"text"`
-	}
-
-	var msg NatsMessage
-	err := json.Unmarshal(data, &msg)
+	err := nats_helper.StartNatsListener("TELEGRAM_OUTPUT_TEXT_QUEUE", listener)
 	if err != nil {
-		log.Printf("[StartNatsListener] Помилка при розборі повідомлення з NATS: %v", err)
-		return 0, ""
+		log.Printf("[StartTextMessagesSender] Помилка: %v", err)
 	}
-
-	return msg.ChatID, msg.Text
 }

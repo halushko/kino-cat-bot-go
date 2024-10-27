@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"encoding/json"
 	"github.com/halushko/kino-cat-core-go/nats_helper"
 	"gopkg.in/telebot.v3"
 	"log"
@@ -19,50 +18,29 @@ type TorrentFile struct {
 
 func HandleDocuments(bot *telebot.Bot) {
 	bot.Handle(telebot.OnDocument, func(c telebot.Context) error {
+		userId := c.Chat().ID
 		document := c.Message().Document
+		mimeType := document.MIME
 
-		log.Printf("[TorrentFileHandler] Отримано файл: %s", document.FileName)
+		log.Printf("[HandleDocuments] Отримано файл: %s", document.FileName)
 
 		if document.MIME != "application/x-bittorrent" {
-			return c.Send("[TorrentFileHandler] Будь-ласка, відправте .torrent файл.")
+			return c.Send("[HandleDocuments] Будь-ласка, відправте .torrent файл.")
 		}
 
-		chatId := c.Chat().ID
 		fileID := document.FileID
 		fileName := document.FileName
 		fileSize := document.FileSize
-		mimeType := document.MIME
-		messageText := c.Message().Text
-		caption := c.Message().Caption
 
-		msg := TorrentFile{
-			ChatID:   chatId,
-			FileID:   fileID,
-			FileName: fileName,
-			Text:     messageText,
-			Caption:  caption,
-			Size:     fileSize,
-			MimeType: mimeType,
-		}
+		log.Printf("[HandleDocuments] userId:%d, uploadedFileId:%s, fileName:%s, size%d, mime:%s", userId, fileID, fileName, fileSize, mimeType)
 
-		log.Printf(
-			"[TorrentFileHandler] chatId:%d, uploadedFileId:%s, fileName:%s, message:%s, caption:%s",
-			chatId, fileID, fileName, messageText, caption,
-		)
-
-		jsonData, err := json.Marshal(msg)
-		if err != nil {
-			log.Printf("[TorrentFileHandler] Error:%s", err)
+		if err := nats_helper.PublishFileInfoMessage("TELEGRAM_INPUT_FILE_QUEUE", userId, fileID, fileName, fileSize, mimeType); err != nil {
+			log.Printf("[HandleDocuments] Error:%s", err)
 			return err
 		}
 
-		if err = nats_helper.PublishToNATS("TELEGRAM_INPUT_FILE_QUEUE", jsonData); err != nil {
-			log.Printf("[TorrentFileHandler] Error:%s", err)
-			return err
-		}
-
-		if err = c.Send("Файл " + document.FileName + " додано до обробки"); err != nil {
-			log.Printf("[TorrentFileHandler] Error:%s", err)
+		if err := c.Send("Файл " + document.FileName + " додано до обробки"); err != nil {
+			log.Printf("[HandleDocuments] Error:%s", err)
 			return err
 		}
 		return nil

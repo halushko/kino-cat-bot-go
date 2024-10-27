@@ -230,6 +230,12 @@ github.com/halushko/kino-cat-core-go v0.0.0-20241014163802-18219f16f2c5 h1:5Xuf5
 github.com/halushko/kino-cat-core-go v0.0.0-20241014163802-18219f16f2c5/go.mod h1:5nB9PMvPVXZBzd/bYtVNebhcL7W2VwU3Z6BI92reHuU=
 github.com/halushko/kino-cat-core-go v0.0.0-20241014165750-3e9a38ec7901 h1:Pudb+p2p91mRIsvqHtQ3M2NBp2K8a+44sLA/1gl3vow=
 github.com/halushko/kino-cat-core-go v0.0.0-20241014165750-3e9a38ec7901/go.mod h1:5nB9PMvPVXZBzd/bYtVNebhcL7W2VwU3Z6BI92reHuU=
+github.com/halushko/kino-cat-core-go v0.0.0-20241016202705-f27e93d253ef h1:F6CW/LNEd08Py/WXiD4NE6+B8/M+4LzekXiZs01YaHk=
+github.com/halushko/kino-cat-core-go v0.0.0-20241016202705-f27e93d253ef/go.mod h1:5nB9PMvPVXZBzd/bYtVNebhcL7W2VwU3Z6BI92reHuU=
+github.com/halushko/kino-cat-core-go v0.0.0-20241027081900-54ad317fbaf6 h1:vHxAcoGYEMQgvcU9HAB/JFIKVbWeZn8cH2RfyCFrL0I=
+github.com/halushko/kino-cat-core-go v0.0.0-20241027081900-54ad317fbaf6/go.mod h1:5nB9PMvPVXZBzd/bYtVNebhcL7W2VwU3Z6BI92reHuU=
+github.com/halushko/kino-cat-core-go v0.0.0-20241027083015-dd9bb3601be0 h1:JwaefuhTYDD8DakdVaDyjokQ8k90jWUGl7OhvcBcSsU=
+github.com/halushko/kino-cat-core-go v0.0.0-20241027083015-dd9bb3601be0/go.mod h1:5nB9PMvPVXZBzd/bYtVNebhcL7W2VwU3Z6BI92reHuU=
 github.com/hashicorp/consul/api v1.12.0/go.mod h1:6pVBMo0ebnYdt2S3H87XhekM/HHrUoTD2XXb/VrZVy0=
 github.com/hashicorp/consul/sdk v0.8.0/go.mod h1:GBvyrGALthsZObzUGsfgHZQDXjg4lOjagTIwIR1vPms=
 github.com/hashicorp/errwrap v1.0.0/go.mod h1:YH+1FKiLXxHSkmPseP+kNlulaMuP3n2brvKWEqk/Jc4=
