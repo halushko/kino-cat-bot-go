@@ -3,9 +3,9 @@ module kino-cat-bot-go
 go 1.23.2
 
 require (
-	github.com/halushko/kino-cat-core-go v0.0.0-20241027083015-dd9bb3601be0 // indirect
+	github.com/halushko/kino-cat-core-go v0.0.0-20241226130156-ce7346443be8 // indirect
 	github.com/klauspost/compress v1.17.2 // indirect
-	golang.org/x/crypto v0.18.0 // indirect
-	golang.org/x/sys v0.16.0 // indirect
+	golang.org/x/crypto v0.31.0 // indirect
+	golang.org/x/sys v0.28.0 // indirect
 	gopkg.in/telebot.v3 v3.3.8 // indirect
 )
