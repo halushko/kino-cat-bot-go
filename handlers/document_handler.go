@@ -53,10 +53,7 @@ func HandleDocuments(bot *telebot.Bot) {
 
 		log.Printf("[HandleDocuments] userId:%d, uploadedFileId:%s, fileName:%s, size%d, mime:%s", userId, fileId, fileName, fileSize, mimeType)
 
-		if err := nats_helper.PublishFileInfoMessage("TELEGRAM_INPUT_FILE_QUEUE", userId, fileId, fileName, fileSize, mimeType, fileUrl); err != nil {
-			log.Printf("[HandleDocuments] Error:%s", err)
-			return err
-		}
+		nats_helper.PublishFileInfoMessage("TELEGRAM_INPUT_FILE_QUEUE", userId, fileId, fileName, fileSize, mimeType, fileUrl)
 
 		if err := c.Send("Файл " + document.FileName + " додано до обробки"); err != nil {
 			log.Printf("[HandleDocuments] Error:%s", err)

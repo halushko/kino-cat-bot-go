@@ -13,10 +13,7 @@ func HandleTextMessages(bot *telebot.Bot) {
 
 		log.Printf("[HandleTextMessages] chatId:%d, message:%s", chatId, message)
 
-		if err := nats_helper.PublishTextMessage("TELEGRAM_INPUT_TEXT_QUEUE", chatId, message); err != nil {
-			log.Printf("[HandleTextMessages] ERROR:%v", err)
-			return err
-		}
+		nats_helper.PublishTextMessage("TELEGRAM_INPUT_TEXT_QUEUE", chatId, message)
 
 		if err := c.Send("Ваше повідомлення " + message + " додано до обробки"); err != nil {
 			log.Printf("[HandleTextMessages] ERROR:%v", err)
