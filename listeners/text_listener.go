@@ -20,7 +20,9 @@ func StartTextMessagesSender(bot *telebot.Bot) {
 		log.Printf("[StartTextMessagesSender] Парсинг повідомлення: chatID = %d, message = %s", userId, messageText)
 
 		if userId != 0 && messageText != "" {
-			_, err = bot.Send(&telebot.User{ID: userId}, messageText)
+			_, err = bot.Send(&telebot.User{ID: userId}, messageText, &telebot.SendOptions{
+				ParseMode: telebot.ModeHTML,
+			})
 			if err != nil {
 				log.Printf("[StartTextMessagesSender] Помилка при відправленні повідомлення користувачу: %v", err)
 			} else {

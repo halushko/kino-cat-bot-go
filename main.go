@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/halushko/kino-cat-core-go/logger_helper"
+	"github.com/halushko/kino-cat-core-go/nats_helper"
 	"kino-cat-bot-go/handlers"
 	"kino-cat-bot-go/listeners"
 	"log"
@@ -25,9 +26,29 @@ func prepareBot() *telebot.Bot {
 	if token == "" {
 		log.Fatal("Необхідно задати токен боту в env BOT_TOKEN")
 	}
+
+	basePoller := &telebot.LongPoller{Timeout: 1 * time.Second}
+	mwPoller := telebot.NewMiddlewarePoller(
+		basePoller,
+		func(upd *telebot.Update) bool {
+			urls := ""
+			if upd.Message != nil && len(upd.Message.CaptionEntities) > 0 {
+				for _, entity := range upd.Message.CaptionEntities {
+					if entity.URL != "" {
+						urls = urls + entity.URL + "\n"
+					}
+				}
+			}
+			if urls != "" {
+				nats_helper.PublishTextMessage("TELEGRAM_INPUT_TEXT_QUEUE", upd.Message.Chat.ID, urls)
+				return false
+			}
+			return true
+		})
+
 	pref := telebot.Settings{
 		Token:  token,
-		Poller: &telebot.LongPoller{Timeout: 1 * time.Second},
+		Poller: mwPoller,
 	}
 
 	bot, err := telebot.NewBot(pref)
@@ -35,7 +56,6 @@ func prepareBot() *telebot.Bot {
 		log.Fatal(err)
 		return nil
 	}
-
 	registerBotHandlers(bot)
 
 	return bot
