@@ -1,9 +1,9 @@
 package main
 
 import (
+	"github.com/halushko/kino-cat-bot-go/handlers"
+	"github.com/halushko/kino-cat-bot-go/listeners"
 	"github.com/halushko/kino-cat-core-go/logger_helper"
-	"kino-cat-bot-go/handlers"
-	"kino-cat-bot-go/listeners"
 	"log"
 	"os"
 	"time"
