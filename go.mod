@@ -1,6 +1,6 @@
-module kino-cat-bot-go
+module github.com/halushko/kino-cat-bot-go
 
-go 1.23.2
+go 1.25
 
 require (
 	github.com/halushko/kino-cat-core-go v0.0.0-20241014165750-3e9a38ec7901 // indirect
