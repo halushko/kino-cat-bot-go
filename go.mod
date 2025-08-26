@@ -1,4 +1,4 @@
-module kino-cat-bot-go
+module github.com/halushko/kino-cat-bot-go
 
 go 1.23.2
 
